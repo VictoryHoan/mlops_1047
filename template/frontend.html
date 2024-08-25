@@ -1,0 +1,125 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Mushroom Edibility Predictor</title>
+</head>
+<body>
+    <h1>Mushroom Edibility Predictor</h1>
+    <form id="mushroomForm">
+        <label for="cap-shape">Cap Shape:</label>
+        <input type="text" id="cap-shape" name="cap-shape"><br>
+
+        <label for="cap-surface">Cap Surface:</label>
+        <input type="text" id="cap-surface" name="cap-surface"><br>
+
+        <label for="cap-color">Cap Color:</label>
+        <input type="text" id="cap-color" name="cap-color"><br>
+
+        <label for="bruises">Bruises:</label>
+        <input type="text" id="bruises" name="bruises"><br>
+
+        <label for="odor">Odor:</label>
+        <input type="text" id="odor" name="odor"><br>
+
+        <!-- Adding all the missing fields -->
+        <label for="gill-attachment">Gill Attachment:</label>
+        <input type="text" id="gill-attachment" name="gill-attachment"><br>
+
+        <label for="gill-spacing">Gill Spacing:</label>
+        <input type="text" id="gill-spacing" name="gill-spacing"><br>
+
+        <label for="gill-size">Gill Size:</label>
+        <input type="text" id="gill-size" name="gill-size"><br>
+
+        <label for="gill-color">Gill Color:</label>
+        <input type="text" id="gill-color" name="gill-color"><br>
+
+        <label for="stalk-shape">Stalk Shape:</label>
+        <input type="text" id="stalk-shape" name="stalk-shape"><br>
+
+        <label for="stalk-root">Stalk Root:</label>
+        <input type="text" id="stalk-root" name="stalk-root"><br>
+
+        <label for="stalk-surface-above-ring">Stalk Surface Above Ring:</label>
+        <input type="text" id="stalk-surface-above-ring" name="stalk-surface-above-ring"><br>
+
+        <label for="stalk-surface-below-ring">Stalk Surface Below Ring:</label>
+        <input type="text" id="stalk-surface-below-ring" name="stalk-surface-below-ring"><br>
+
+        <label for="stalk-color-above-ring">Stalk Color Above Ring:</label>
+        <input type="text" id="stalk-color-above-ring" name="stalk-color-above-ring"><br>
+
+        <label for="stalk-color-below-ring">Stalk Color Below Ring:</label>
+        <input type="text" id="stalk-color-below-ring" name="stalk-color-below-ring"><br>
+
+        <label for="veil-type">Veil Type:</label>
+        <input type="text" id="veil-type" name="veil-type"><br>
+
+        <label for="veil-color">Veil Color:</label>
+        <input type="text" id="veil-color" name="veil-color"><br>
+
+        <label for="ring-number">Ring Number:</label>
+        <input type="text" id="ring-number" name="ring-number"><br>
+
+        <label for="ring-type">Ring Type:</label>
+        <input type="text" id="ring-type" name="ring-type"><br>
+
+        <label for="spore-print-color">Spore Print Color:</label>
+        <input type="text" id="spore-print-color" name="spore-print-color"><br>
+
+        <label for="population">Population:</label>
+        <input type="text" id="population" name="population"><br>
+
+        <label for="habitat">Habitat:</label>
+        <input type="text" id="habitat" name="habitat"><br>
+
+        <button type="button" onclick="submitForm()">Predict</button>
+    </form>
+    <p id="predictionResult"></p>
+
+    <script>
+        function submitForm() {
+            const formData = new FormData(document.getElementById('mushroomForm'));
+            const jsonData = {};
+
+            formData.forEach((value, key) => {
+                jsonData[key] = value;
+            });
+
+            console.log("Form data sent to backend:", jsonData); // Log the data being sent
+
+            fetch('/predict', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify(jsonData),
+            })
+            .then(response => response.json())
+            .then(data => {
+                console.log("Response from backend:", data); // Log the response
+                if (data.prediction) {
+                    document.getElementById('predictionResult').textContent = 
+                        'The mushroom is predicted to be: ' + data.prediction;
+                } else if (data.error) {
+                    document.getElementById('predictionResult').textContent = 
+                        'Error: ' + data.error;
+                } else {
+                    document.getElementById('predictionResult').textContent = 
+                        'The mushroom is predicted to be: undefined';
+                }
+            })
+            .catch(error => {
+                console.error("Error occurred:", error); // Log any errors
+                document.getElementById('predictionResult').textContent = 
+                    'Error: ' + error;
+            });
+        }
+    </script>
+</body>
+</html>
+
+
+
